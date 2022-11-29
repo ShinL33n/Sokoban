@@ -1,4 +1,7 @@
-﻿  Sokoban.cpp
-  MenuHandler.cpp
-  Generating Code...
-  Sokoban.vcxproj -> C:\Pliki\Dokumenty\Programming Projects\C++\Sokoban\x64\Debug\Sokoban.exe
+﻿  MapHandler.cpp
+D:\Dokumenty\Programming projects\C++\Sokoban\Sokoban\SourceFiles\MapHandler.cpp(58,20): warning C4018: '<': signed/unsigned mismatch
+D:\Dokumenty\Programming projects\C++\Sokoban\Sokoban\SourceFiles\MapHandler.cpp(60,21): warning C4018: '<': signed/unsigned mismatch
+D:\Dokumenty\Programming projects\C++\Sokoban\Sokoban\SourceFiles\MapHandler.cpp(62,22): warning C4018: '<': signed/unsigned mismatch
+D:\Dokumenty\Programming projects\C++\Sokoban\Sokoban\SourceFiles\MapHandler.cpp(71,20): warning C4018: '<': signed/unsigned mismatch
+D:\Dokumenty\Programming projects\C++\Sokoban\Sokoban\SourceFiles\MapHandler.cpp(72,21): warning C4018: '<': signed/unsigned mismatch
+  Sokoban.vcxproj -> D:\Dokumenty\Programming projects\C++\Sokoban\x64\Debug\Sokoban.exe

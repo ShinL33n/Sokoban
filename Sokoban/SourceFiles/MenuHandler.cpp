@@ -1,11 +1,11 @@
-#include <stdio.h>
 #include <iostream>
 #include "../HeaderFiles/MenuHandler.h"
 
+using namespace std;
 
 MenuHandler::MenuHandler()
 {
-
+	//system("color 0B");
 }
 
 MenuHandler::~MenuHandler()
@@ -13,92 +13,83 @@ MenuHandler::~MenuHandler()
 
 }
 
-//enum MenuHandler::DisplayedMenuType
-//{
-//	main,
-//	pause
-//};
+short MenuHandler::SelectedOption(DisplayedMenuType MenuType)
+{
+	short enteredOption;
+	bool isEnteredOptionValid = false;
+
+	do {
+		while (!(std::cin >> enteredOption)) {
+			cin.clear();
+			cin.ignore(64, '\n');
+			cerr << "Wpisz podany wyzej numer opcji!\n";
+		}
+
+		if (MenuType == main) {
+			isEnteredOptionValid = (enteredOption > 0 && enteredOption <= _mainMenuOptionsNumber) ? true : false;
+		}
+		else if (MenuType == pause) {
+			isEnteredOptionValid = (enteredOption > 0 && enteredOption <= _pauseMenuOptionsNumber) ? true : false;
+		}
+		else {
+			cout << "Error w wyœwietlaniu menu!\n";
+		}
+
+		if(!isEnteredOptionValid) cout << "Wybierz poprawny numer!\n";
+
+	} while (!isEnteredOptionValid);
+
+	return enteredOption;
+}
 
 void MenuHandler::DisplaySokobanLogo()
 {
-	printf("		    ##\\                 ##\\\n");
-	printf("                    ## |                ## |\n");
-	printf(" #######\\  ######\\  ## |  ##\\  ######\\  #######\\   ######\\  #######\\\n");
-	printf("##  _____|##  __##\\ ## | ##  |##  __##\\ ##  __##\\  \\____##\\ ##  __##\\\n");
-	printf("\\######\\  ## /  ## |######  / ## /  ## |## |  ## | ####### |## |  ## |\n");
-	printf(" \\____##\\ ## |  ## |##  _##<  ## |  ## |## |  ## |##  __## |## |  ## |\n");
-	printf("#######  |\\######  |## | \\##\\ \\######  |#######  |\\####### |## |  ## |\n");
-	printf("\\_______/  \\______/ \\__|  \\__| \\______/ \\_______/  \\_______|\\__|  \\__|\n");
+	cout << "\033[36;40m";
+	cout << char(201);
+	for (int i = 0; i < 75; i++) cout << char(205);
+	cout << char(187) << endl;
+	cout << char(186) << "									    " << "\033[36;40m" << char(186) << endl;
+ 	cout << "\033[36;40m" << char(186) << "\033[96;40m	  	       ##\\                 ##\\				    " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m                      ## |                ## |				    " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m   #######\\  ######\\  ## |  ##\\  ######\\  #######\\   ######\\  #######\\     " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m  ##  _____|##  __##\\ ## | ##  |##  __##\\ ##  __##\\  \\____##\\ ##  __##\\    " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m  \\######\\  ## /  ## |######  / ## /  ## |## |  ## | ####### |## |  ## |   " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m   \\____##\\ ## |  ## |##  _##<  ## |  ## |## |  ## |##  __## |## |  ## |   " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m  #######  |\\######  |## | \\##\\ \\######  |#######  |\\####### |## |  ## |   " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m  \\_______/  \\______/ \\__|  \\__| \\______/ \\_______/  \\_______|\\__|  \\__|   " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "									    " << char(186) << endl;
+	cout << char(204);
+	for (int i = 0; i < 75; i++) cout << char(205);
+	cout << char(185) << endl;
+	cout << char(186) << "									    " << char(186) << endl;
 };
 
 void MenuHandler::DisplayMainMenu()
 {
 	DisplaySokobanLogo();
-	printf("-------------------------\n");
-	printf("| 1. Wybierz poziom	|\n");
-	printf("| 2. Wyjdz z gry	|\n");
-	printf("-------------------------\n");
+	cout << "\033[36;40m" << char(186) << "\033[96;40m				  MAIN MENU		  		    " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "				     " << char(196) << char(196) << char(196) << "				    " << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m			      1. Wybierz poziom		  		    " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m			      2. Wyjdz z gry		  		    " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "									    " << char(186) << endl;
+	cout << char(200);
+	for (int i = 0; i < 75; i++) cout << char(205);
+	cout << char(188) << endl;
+	cout << "\033[97;40m";
 };
 
 void MenuHandler::DisplayPauseMenu()
 {
 	DisplaySokobanLogo();
-	printf("-------------------------\n");
-	printf("| 1. Rozpocznij od nowa	|\n");
-	printf("| 2. Wybierz poziom	|\n");
-	printf("| 3. Wyjdz do menu	|\n");
-	printf("| 4. Wyjdz z gry	|\n");
-	printf("-------------------------\n");
+	cout << "\033[36;40m" << char(186) << "\033[96;40m				  PAUSE MENU		  		    " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "				     " << char(196) << char(196) << char(196) << char(196) << "				    " << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m			      1. Rozpocznij od nowa			    " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m			      2. Wybierz poziom		  		    " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m			      3. Wyjdz do menu		  		    " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "\033[96;40m			      4. Wyjdz z gry		  		    " << "\033[36;40m" << char(186) << endl;
+	cout << "\033[36;40m" << char(186) << "									    " << char(186) << endl;
+	cout << char(200);
+	for (int i = 0; i < 75; i++) cout << char(205);
+	cout << char(188) << endl;
+	cout << "\033[97;40m";
 };
-
-// Metoda sprawdzaj¹ca czy wpisana w konsoli wartoœæ jest typu liczbowego
-short MenuHandler::KeyboardSelection()
-{
-	short option;
-
-	while (!(std::cin >> option)) {
-		std::cin.clear();
-		std::cin.ignore(64, '\n');
-		std::cerr << "Wpisz podany wyzej numer opcji!" << std::endl;
-	}
-
-	return option;
-}
-
-// Metoda sprawdzaj¹ca czy podana wartoœæ jest wartoœci¹ poprawn¹ dla danego menu (g³ównego/pauzy)
-short MenuHandler::IsSelectedOptionValid(DisplayedMenuType menuType)
-{
-	short selectedValue = KeyboardSelection();
-
-	switch (menuType)
-	{
-	case main:
-		if (selectedValue > 0 && selectedValue <= _mainMenuOptionsNumber)
-			return selectedValue;
-		break;
-	case pause:
-		if (selectedValue > 0 && selectedValue <= _pauseMenuOptionsNumber)
-			return selectedValue;
-		break;
-	default:
-		printf("Error w wyœwietlaniu menu!\n");
-		return -1;
-		break;
-	}
-
-	return -1;
-}
-
-// Medoda zwracaj¹ca zwalidowan¹ wybran¹ opcje z menu
-short MenuHandler::SelectedOption(DisplayedMenuType menuType=main) {
-
-	int selectedValue = IsSelectedOptionValid(menuType);
-
-	while (selectedValue == -1) {
-		printf("Wybierz poprawny numer!\n");
-		selectedValue = IsSelectedOptionValid(menuType);
-	}
-
-	return selectedValue;
-
-}

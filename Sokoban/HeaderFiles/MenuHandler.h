@@ -6,20 +6,17 @@ private:
 	int _mainMenuOptionsNumber = 2;
 	int _pauseMenuOptionsNumber = 4;
 
+	static void DisplaySokobanLogo();
+
 
 public:
 	MenuHandler();
-
 	~MenuHandler();
 
-	enum DisplayedMenuType { main, pause};
+	enum DisplayedMenuType { main, pause };
 
-	static void DisplaySokobanLogo();
-	static void DisplayMainMenu();
-	static void DisplayPauseMenu();
-
-	short KeyboardSelection();
-	short IsSelectedOptionValid(DisplayedMenuType);
 	short SelectedOption(DisplayedMenuType);
 
+	static void DisplayMainMenu();
+	static void DisplayPauseMenu();
 };

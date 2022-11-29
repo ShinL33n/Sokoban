@@ -1,6 +1,6 @@
-#include <iostream>
+﻿#include <iostream>
 #include "HeaderFiles/MenuHandler.h"
-
+#include "HeaderFiles/MapHandler.h"
 
 int main()
 {
@@ -14,7 +14,14 @@ int main()
 
 	int opt = menu.SelectedOption(menuType);
 
+
 	std::cout << opt;
+
+	
+	//std::cout << "\033[H\033[J";
+
+	MapHandler map;
+	map.LoadMap(1);
 
     return 0;
 }

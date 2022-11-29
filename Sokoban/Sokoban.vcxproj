@@ -128,9 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sokoban.cpp" />
+    <ClCompile Include="SourceFiles\MapHandler.cpp" />
     <ClCompile Include="SourceFiles\MenuHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HeaderFiles\MapHandler.h" />
     <ClInclude Include="HeaderFiles\MenuHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
