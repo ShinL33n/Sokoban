@@ -9,20 +9,23 @@ private:
 
 	void MapArrayInit(unsigned int width, unsigned int height);
 	void DeleteMapArray();
+	void LevelToMapArray(std::ifstream& ifs);
+	
+	char* PathHelper(short lvl);
 
-public:
 	enum mapElems {
 		wall = 1,
 		air = 2,
 		player = 3,
 		chest = 4,
-		target = 5
+		target = 5,
+		null = 6
 	};
 
+public:
 	MapHandler();
 	~MapHandler();
 
-	void LoadMap(int selectedLvl);
-	void pathHelper(int l,char* f);
+	void LoadMap(short selectedLvl);
 
 };

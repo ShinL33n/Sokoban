@@ -16,37 +16,59 @@ MapHandler::~MapHandler()
 	DeleteMapArray();
 }
 
-void MapHandler::LoadMap(int selectedLvl = 1)
+void MapHandler::LoadMap(short selectedLvl = 1)
 {	
-	/*char lvlname[256];
-	sprintf_s(lvlname, "%i", selectedlvl);*/
-	//char* filename = new char[1];
-	/*char filepath[] = { 'r','e','s','o','u','r','c','e','f','i','l','e','s','/','l','e','v','e','l','s','/','l','e','v','e','l','\0' };
-	filename = strcat(strcat(filepath, lvlname), ".txt");*/
-	char fileName[256];
-	pathHelper(selectedLvl, fileName);
-	
-	cout << fileName << endl;
+
+	char* fileName = PathHelper(selectedLvl);
 
 	ifstream input(fileName);
 
-	if (input.good()) cout << "oooooo";
-	else cout << "dupa";
-	system("pause");
+	if (input.good()) {
+
+		LevelToMapArray(input);
+
+	}
+	else 
+		cout << "Wystapil blad podczas wczytywania levela.";
+
+
 	input.close();
-	
 }
 
-void MapHandler::pathHelper(int l, char* f)
+void MapHandler::LevelToMapArray(ifstream& ifs)
 {
-	char lvlName[256];
-	sprintf_s(lvlName, "%d", l);
+	unsigned int width = 0, height = 1;
+	bool isWidthCounted = false;
+	char checkChar;
 
-	char filePath[1000] = { "ResourceFiles/levels/level" };
+	while (ifs.get(checkChar)) {
 
-	//char filePath[] = { 'R', 'e', 's', 'o', 'u', 'r', 'c', 'e', 'F', 'i', 'l', 'e', 's', '/', 'l', 'e', 'v', 'e', 'l', 's', '/', 'l', 'e', 'v', 'e', 'l', '\0' };
-	f = strcat(filePath, lvlName);
-	f = strcat(f, ".txt");
+		if (checkChar == '\n') {
+			isWidthCounted = true;
+			height++;
+		}
+
+		if (!isWidthCounted) width++;
+	}
+}
+
+char* MapHandler::PathHelper(short lvl)
+{
+	char* lvlName = new char[sizeof(short)];
+	char filePathPrefix[] = "ResourceFiles/levels/level";
+	char filePathPostfix[] = ".txt";
+
+	sprintf(lvlName, "%i", lvl);
+
+	char* fileName = new char[strlen(filePathPrefix) + strlen(filePathPostfix) + strlen(lvlName)];
+	sprintf(fileName, "%c", '\0');
+
+	strcat(fileName, filePathPrefix);
+	strcat(fileName, lvlName);
+	strcat(fileName, filePathPostfix);
+
+	
+	return fileName;
 }
 
 void MapHandler::MapArrayInit(unsigned int width, unsigned int height)
