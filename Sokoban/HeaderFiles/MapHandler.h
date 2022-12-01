@@ -3,13 +3,14 @@
 class MapHandler
 {
 private:
-	unsigned int _width, _height;
 	const unsigned int _hollow = 10;
-	char*** _map;
+	unsigned int _width, _height;
+	//char*** _map;
 
-	void MapArrayInit(unsigned int width, unsigned int height);
+	void LevelToMapArray(std::ifstream &ifs);
+	void MapSizeReading(std::ifstream &ifs);
+	void MapArrayInit();
 	void DeleteMapArray();
-	void LevelToMapArray(std::ifstream& ifs);
 	
 	char* PathHelper(short lvl);
 
@@ -21,6 +22,9 @@ private:
 		target = 5,
 		null = 6
 	};
+
+	mapElems FieldValue(char lvlElem);
+	mapElems*** _map;
 
 public:
 	MapHandler();

@@ -128,10 +128,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Sokoban.cpp" />
+    <ClCompile Include="SourceFiles\GameLogic.cpp" />
     <ClCompile Include="SourceFiles\MapHandler.cpp" />
     <ClCompile Include="SourceFiles\MenuHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HeaderFiles\GameLogic.h" />
     <ClInclude Include="HeaderFiles\MapHandler.h" />
     <ClInclude Include="HeaderFiles\MenuHandler.h" />
   </ItemGroup>

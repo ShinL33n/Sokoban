@@ -1,9 +1,2 @@
 ﻿  Sokoban.cpp
-  MapHandler.cpp
-C:\Pliki\Dokumenty\Programming Projects\C++\Sokoban\Sokoban\SourceFiles\MapHandler.cpp(80,20): warning C4018: '<': signed/unsigned mismatch
-C:\Pliki\Dokumenty\Programming Projects\C++\Sokoban\Sokoban\SourceFiles\MapHandler.cpp(82,21): warning C4018: '<': signed/unsigned mismatch
-C:\Pliki\Dokumenty\Programming Projects\C++\Sokoban\Sokoban\SourceFiles\MapHandler.cpp(84,22): warning C4018: '<': signed/unsigned mismatch
-C:\Pliki\Dokumenty\Programming Projects\C++\Sokoban\Sokoban\SourceFiles\MapHandler.cpp(93,20): warning C4018: '<': signed/unsigned mismatch
-C:\Pliki\Dokumenty\Programming Projects\C++\Sokoban\Sokoban\SourceFiles\MapHandler.cpp(94,21): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
   Sokoban.vcxproj -> C:\Pliki\Dokumenty\Programming Projects\C++\Sokoban\x64\Debug\Sokoban.exe

@@ -21,7 +21,7 @@ int main()
 	//std::cout << "\033[H\033[J";
 
 	MapHandler map;
-	map.LoadMap(1);
+	map.LoadMap(2);
 
     return 0;
 }

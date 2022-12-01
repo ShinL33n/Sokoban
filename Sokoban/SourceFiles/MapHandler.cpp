@@ -8,7 +8,9 @@ using namespace std;
 
 MapHandler::MapHandler()
 {
-	MapArrayInit(10, 10);
+	_width = 0;
+	_height = 0;
+	_map = nullptr;
 }
 
 MapHandler::~MapHandler()
@@ -21,10 +23,12 @@ void MapHandler::LoadMap(short selectedLvl = 1)
 
 	char* fileName = PathHelper(selectedLvl);
 
-	ifstream input(fileName);
+	ifstream input(fileName, ifstream::in);
 
 	if (input.good()) {
 
+		MapSizeReading(input);
+		MapArrayInit();
 		LevelToMapArray(input);
 
 	}
@@ -35,11 +39,51 @@ void MapHandler::LoadMap(short selectedLvl = 1)
 	input.close();
 }
 
-void MapHandler::LevelToMapArray(ifstream& ifs)
+void MapHandler::LevelToMapArray(ifstream &ifs)
 {
-	unsigned int width = 0, height = 1;
+	ifs.clear();
+	ifs.seekg(0);
+
+	char lvlElem = '\0';
+
+	for (int h = 0; h < _height; lvlElem != '\n' ? h++ : h) {
+		for (int w = 0; w < _width; lvlElem != '\n' ? w++ : w) {
+
+			ifs.get(lvlElem);
+
+			if (lvlElem != '\n')
+				_map[w][h][0] = FieldValue(lvlElem);
+		}
+	}
+
+	cout << endl;
+	for (int h = 0; h < _height; h++) {
+		for (int w = 0; w < _width; w++) {
+			cout << _map[w][h][0] << " ";
+		}
+		cout << endl;
+	}
+}
+
+MapHandler::mapElems MapHandler::FieldValue(char lvlElem)
+{
+		 if (lvlElem == '1') return wall;
+	else if (lvlElem == '2') return air;
+	else if (lvlElem == '3') return player;
+	else if (lvlElem == '4') return chest;
+	else if (lvlElem == '5') return target;
+	else if (lvlElem == '6') return null;
+	else {
+			 cout << "Wadliwy level, nierozpoznany element mapy!" << endl;
+			 return null;
+		 }
+}
+
+void MapHandler::MapSizeReading(ifstream &ifs)
+{
+	unsigned int width = 0, height = 0;
 	bool isWidthCounted = false;
-	char checkChar;
+	char checkChar = '\0';
 
 	while (ifs.get(checkChar)) {
 
@@ -50,6 +94,9 @@ void MapHandler::LevelToMapArray(ifstream& ifs)
 
 		if (!isWidthCounted) width++;
 	}
+
+	_width = width;
+	_height = ++height;
 }
 
 char* MapHandler::PathHelper(short lvl)
@@ -71,12 +118,19 @@ char* MapHandler::PathHelper(short lvl)
 	return fileName;
 }
 
-void MapHandler::MapArrayInit(unsigned int width, unsigned int height)
+void MapHandler::MapArrayInit()
 {
-	_width = width;
-	_height = height;
-
-	_map = new char** [_width];
+	_map = new mapElems** [_width];
+	for (int i = 0; i < _width; i++) {
+		_map[i] = new mapElems* [_height];
+		for (int j = 0; j < _height; j++) {
+			_map[i][j] = new mapElems[_hollow];
+			for (int k = 0; k < _hollow; k++) {
+				_map[i][j][k] = null;
+			}
+		}
+	}
+	/*_map = new char** [_width];
 	for (int i = 0; i < _width; i++) {
 		_map[i] = new char* [_height];
 		for (int j = 0; j < _height; j++) {
@@ -85,7 +139,7 @@ void MapHandler::MapArrayInit(unsigned int width, unsigned int height)
 				_map[i][j][k] = 0;
 			}
 		}
-	}
+	}*/
 }
 
 void MapHandler::DeleteMapArray()
