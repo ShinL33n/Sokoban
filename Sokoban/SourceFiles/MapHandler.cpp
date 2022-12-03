@@ -18,6 +18,34 @@ MapHandler::~MapHandler()
 	DeleteMapArray();
 }
 
+void MapHandler::DisplayMap()
+{
+	for (int h = 0; h < _height; h++) {
+		for (int w = 0; w < _width; w++) {
+			cout << DisplayedChar(w,h);
+		}
+		cout << endl;
+	}
+}
+
+char MapHandler::DisplayedChar(int width, int height)
+{
+	mapElems e = _map[width][height][0];
+
+		 if (e == wall) return char(178);
+	else if (e == air) return char(32);
+	else if (e == player) return char(2);
+	else if (e == chest) return char(254);
+	else if (e == target) return char(158);
+	else if (e == null) return char(255);
+	else
+		 {
+			 cout << "Wystopil blad przy wyswietlaniu elementu mapy!" << endl;
+			 return '\0';
+		 }
+
+}
+
 void MapHandler::LoadMap(short selectedLvl = 1)
 {	
 
@@ -54,14 +82,6 @@ void MapHandler::LevelToMapArray(ifstream &ifs)
 			if (lvlElem != '\n')
 				_map[w][h][0] = FieldValue(lvlElem);
 		}
-	}
-
-	cout << endl;
-	for (int h = 0; h < _height; h++) {
-		for (int w = 0; w < _width; w++) {
-			cout << _map[w][h][0] << " ";
-		}
-		cout << endl;
 	}
 }
 
@@ -103,6 +123,7 @@ char* MapHandler::PathHelper(short lvl)
 {
 	char* lvlName = new char[sizeof(short)];
 	char filePathPrefix[] = "ResourceFiles/levels/level";
+	//char filePathPrefix[] = "../../Sokoban/ResourceFiles/levels/level";
 	char filePathPostfix[] = ".txt";
 
 	sprintf(lvlName, "%i", lvl);
@@ -113,7 +134,6 @@ char* MapHandler::PathHelper(short lvl)
 	strcat(fileName, filePathPrefix);
 	strcat(fileName, lvlName);
 	strcat(fileName, filePathPostfix);
-
 	
 	return fileName;
 }
@@ -121,36 +141,26 @@ char* MapHandler::PathHelper(short lvl)
 void MapHandler::MapArrayInit()
 {
 	_map = new mapElems** [_width];
-	for (int i = 0; i < _width; i++) {
-		_map[i] = new mapElems* [_height];
-		for (int j = 0; j < _height; j++) {
-			_map[i][j] = new mapElems[_hollow];
+	for (int w = 0; w < _width; w++) {
+		_map[w] = new mapElems* [_height];
+		for (int h = 0; h < _height; h++) {
+			_map[w][h] = new mapElems[_hollow];
 			for (int k = 0; k < _hollow; k++) {
-				_map[i][j][k] = null;
+				_map[w][h][k] = null;
 			}
 		}
 	}
-	/*_map = new char** [_width];
-	for (int i = 0; i < _width; i++) {
-		_map[i] = new char* [_height];
-		for (int j = 0; j < _height; j++) {
-			_map[i][j] = new char[_hollow];
-			for (int k = 0; k < _hollow; k++) {
-				_map[i][j][k] = 0;
-			}
-		}
-	}*/
 }
 
 void MapHandler::DeleteMapArray()
 {
-	for (int i = 0; i < _width; i++) {
-		for (int j = 0; j < _height; j++) {
-			delete[] _map[i][j];
-			_map[i][j] = nullptr;
+	for (int w = 0; w < _width; w++) {
+		for (int h = 0; h < _height; h++) {
+			delete[] _map[w][h];
+			_map[w][h] = nullptr;
 		}
-		delete[] _map[i];
-		_map[i] = nullptr;
+		delete[] _map[w];
+		_map[w] = nullptr;
 	}
 
 	delete[] _map;

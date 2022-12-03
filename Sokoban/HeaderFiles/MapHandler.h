@@ -5,14 +5,15 @@ class MapHandler
 private:
 	const unsigned int _hollow = 10;
 	unsigned int _width, _height;
-	//char*** _map;
 
 	void LevelToMapArray(std::ifstream &ifs);
 	void MapSizeReading(std::ifstream &ifs);
 	void MapArrayInit();
+	void RedoMapInit();
 	void DeleteMapArray();
 	
 	char* PathHelper(short lvl);
+	char DisplayedChar(int w, int h);
 
 	enum mapElems {
 		wall = 1,
@@ -31,5 +32,6 @@ public:
 	~MapHandler();
 
 	void LoadMap(short selectedLvl);
+	void DisplayMap();
 
 };

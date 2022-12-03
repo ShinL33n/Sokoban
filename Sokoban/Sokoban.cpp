@@ -22,6 +22,7 @@ int main()
 
 	MapHandler map;
 	map.LoadMap(2);
+	map.DisplayMap();
 
     return 0;
 }
