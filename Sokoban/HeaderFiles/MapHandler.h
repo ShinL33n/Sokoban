@@ -3,7 +3,8 @@
 class MapHandler
 {
 private:
-	const unsigned int _hollow = 10;
+	const unsigned int _hollow = 21;
+	const unsigned int _main = _hollow / 2;
 	unsigned int _width, _height;
 
 	void LevelToMapArray(std::ifstream &ifs);
@@ -24,14 +25,41 @@ private:
 		null = 6
 	};
 
+	struct _PlayerPosition {
+		int width;
+		int height;
+	};
+
 	mapElems FieldValue(char lvlElem);
 	mapElems*** _map;
 
+	_PlayerPosition _playerPosition;
+
+
 public:
 	MapHandler();
+	MapHandler(short selectedLvl);
 	~MapHandler();
 
 	void LoadMap(short selectedLvl);
 	void DisplayMap();
+
+	void ApplyMoveToArr(int x, int y);
+	void MoveMapChange();
+	void MoveChest(int x, int y);
+
+	bool IsThereAWall(int x, int y);
+	bool IsThereAChest(int x, int y);
+	bool IsInfrontAvaible(int actualWidth, int actualHeight, int x, int y);
+	bool CanMove(int x, int y);
+
+	mapElems WhatIsInfront(int w, int h, int x, int y);
+
+	//void MoveMapChange();
+	//void ApplyMoveToArr(int x, int y);
+	//void MoveChest();
+
+	//bool IsThereAWall(int x, int y);
+	//bool IsThereAChest(int x, int y);
 
 };

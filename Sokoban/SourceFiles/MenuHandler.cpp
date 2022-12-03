@@ -6,6 +6,7 @@ using namespace std;
 MenuHandler::MenuHandler()
 {
 	//system("color 0B");
+	displayedMenuType menuType = main;
 }
 
 MenuHandler::~MenuHandler()
@@ -13,13 +14,13 @@ MenuHandler::~MenuHandler()
 
 }
 
-short MenuHandler::SelectedOption(DisplayedMenuType MenuType)
+short MenuHandler::SelectedOption(displayedMenuType MenuType)
 {
 	short enteredOption;
 	bool isEnteredOptionValid = false;
 
 	do {
-		while (!(std::cin >> enteredOption)) {
+		while (!(cin >> enteredOption)) {
 			cin.clear();
 			cin.ignore(64, '\n');
 			cerr << "Wpisz podany wyzej numer opcji!\n";
@@ -66,6 +67,7 @@ void MenuHandler::DisplaySokobanLogo()
 
 void MenuHandler::DisplayMainMenu()
 {
+	cout << "\033[H\033[J";
 	DisplaySokobanLogo();
 	cout << "\033[36;40m" << char(186) << "\033[96;40m				  MAIN MENU		  		    " << "\033[36;40m" << char(186) << endl;
 	cout << "\033[36;40m" << char(186) << "				     " << char(196) << char(196) << char(196) << "				    " << char(186) << endl;
@@ -80,6 +82,7 @@ void MenuHandler::DisplayMainMenu()
 
 void MenuHandler::DisplayPauseMenu()
 {
+	cout << "\033[H\033[J";
 	DisplaySokobanLogo();
 	cout << "\033[36;40m" << char(186) << "\033[96;40m				  PAUSE MENU		  		    " << "\033[36;40m" << char(186) << endl;
 	cout << "\033[36;40m" << char(186) << "				     " << char(196) << char(196) << char(196) << char(196) << "				    " << char(186) << endl;

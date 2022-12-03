@@ -8,9 +8,16 @@ using namespace std;
 
 MapHandler::MapHandler()
 {
+
+}
+
+MapHandler::MapHandler(short selectedLvl = 1)
+{
 	_width = 0;
 	_height = 0;
 	_map = nullptr;
+
+	LoadMap(selectedLvl);
 }
 
 MapHandler::~MapHandler()
@@ -20,8 +27,10 @@ MapHandler::~MapHandler()
 
 void MapHandler::DisplayMap()
 {
-	for (int h = 0; h < _height; h++) {
-		for (int w = 0; w < _width; w++) {
+	cout << "\033[H\033[J";
+
+	for (short h = 0; h < _height; h++) {
+		for (short w = 0; w < _width; w++) {
 			cout << DisplayedChar(w,h);
 		}
 		cout << endl;
@@ -30,7 +39,7 @@ void MapHandler::DisplayMap()
 
 char MapHandler::DisplayedChar(int width, int height)
 {
-	mapElems e = _map[width][height][0];
+	mapElems e = _map[width][height][_main];
 
 		 if (e == wall) return char(178);
 	else if (e == air) return char(32);
@@ -46,7 +55,7 @@ char MapHandler::DisplayedChar(int width, int height)
 
 }
 
-void MapHandler::LoadMap(short selectedLvl = 1)
+void MapHandler::LoadMap(short selectedLvl)
 {	
 
 	char* fileName = PathHelper(selectedLvl);
@@ -58,6 +67,7 @@ void MapHandler::LoadMap(short selectedLvl = 1)
 		MapSizeReading(input);
 		MapArrayInit();
 		LevelToMapArray(input);
+		RedoMapInit();
 
 	}
 	else 
@@ -73,14 +83,35 @@ void MapHandler::LevelToMapArray(ifstream &ifs)
 	ifs.seekg(0);
 
 	char lvlElem = '\0';
+	mapElems mE = null;
 
-	for (int h = 0; h < _height; lvlElem != '\n' ? h++ : h) {
-		for (int w = 0; w < _width; lvlElem != '\n' ? w++ : w) {
+	for (short h = 0; h < _height; lvlElem != '\n' ? h++ : h) {
+		for (short w = 0; w < _width; lvlElem != '\n' ? w++ : w) {
 
 			ifs.get(lvlElem);
 
-			if (lvlElem != '\n')
-				_map[w][h][0] = FieldValue(lvlElem);
+			if (lvlElem != '\n') {
+				mE = FieldValue(lvlElem);
+				_map[w][h][_main] = mE;
+			}
+
+			if (mE == player) {
+				_playerPosition.width = w;
+				_playerPosition.height = h ;
+			}
+		}
+	}
+}
+
+void MapHandler::RedoMapInit()
+{
+	for (short w = 0; w < _width; w++) {
+		for (short h = 0; h < _height; h++) {
+			for (short d = 0; d < _hollow; d++) {
+
+				if (d != _main) 
+					_map[w][h][d] = _map[w][h][_main];
+			}
 		}
 	}
 }
@@ -138,14 +169,73 @@ char* MapHandler::PathHelper(short lvl)
 	return fileName;
 }
 
+void MapHandler::ApplyMoveToArr(int x, int y)
+{
+	_map[_playerPosition.width + x][_playerPosition.height + y][_main] = player;
+	_map[_playerPosition.width][_playerPosition.height][_main] = air;
+	_playerPosition.width += x;
+	_playerPosition.height += y;
+}
+
+///Stosowaæ przed zatwierdzeniem jakiegokolwiek ruchu
+void MapHandler::MoveMapChange()
+{
+	for (short w = 0; w < _width; w++) {
+		for (short h = 0; h < _height; h++) {
+			for (short d = _hollow - 1; d > _main; d--) {
+
+				_map[w][h][d] = _map[w][h][d - 1];
+			}
+		}
+	}
+}
+
+void MapHandler::MoveChest(int x, int y)
+{
+	//if (!IsThereAWall(x+x, y+y)) {
+		_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] = chest;
+		_map[_playerPosition.width + x][_playerPosition.height + y][_main] = air;
+
+	//}
+}
+bool MapHandler::CanMove(int x, int y)
+{
+	return IsInfrontAvaible(_playerPosition.width, _playerPosition.height,  x,  y);
+}
+
+bool MapHandler::IsInfrontAvaible(int actualWidth, int actualHeight, int x, int y)
+{
+	if (WhatIsInfront(actualWidth, actualHeight, x, y) == air || WhatIsInfront(actualWidth, actualHeight, x, y) == target)
+		return true;
+	else if (WhatIsInfront(actualWidth, actualHeight, x, y) == chest)
+		return IsInfrontAvaible(actualWidth + x, actualHeight + y, x, y);
+	else
+		return false;
+}
+
+MapHandler::mapElems MapHandler::WhatIsInfront(int w, int h, int x, int y)
+{
+	return _map[w + x][h + y][_main];
+}
+
+bool MapHandler::IsThereAWall(int x, int y)
+{
+	return _map[_playerPosition.width + x][_playerPosition.height + y][_main] == wall;
+}
+
+bool MapHandler::IsThereAChest(int x, int y)
+{
+	return _map[_playerPosition.width + x][_playerPosition.height + y][_main] == chest;
+}
+
 void MapHandler::MapArrayInit()
 {
 	_map = new mapElems** [_width];
-	for (int w = 0; w < _width; w++) {
+	for (short w = 0; w < _width; w++) {
 		_map[w] = new mapElems* [_height];
-		for (int h = 0; h < _height; h++) {
+		for (short h = 0; h < _height; h++) {
 			_map[w][h] = new mapElems[_hollow];
-			for (int k = 0; k < _hollow; k++) {
+			for (short k = 0; k < _hollow; k++) {
 				_map[w][h][k] = null;
 			}
 		}
@@ -154,8 +244,8 @@ void MapHandler::MapArrayInit()
 
 void MapHandler::DeleteMapArray()
 {
-	for (int w = 0; w < _width; w++) {
-		for (int h = 0; h < _height; h++) {
+	for (short w = 0; w < _width; w++) {
+		for (short h = 0; h < _height; h++) {
 			delete[] _map[w][h];
 			_map[w][h] = nullptr;
 		}

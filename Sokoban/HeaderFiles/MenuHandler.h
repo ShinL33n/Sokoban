@@ -8,15 +8,14 @@ private:
 
 	static void DisplaySokobanLogo();
 
-
+	enum displayedMenuType { main, pause };
 
 public:
 	MenuHandler();
 	~MenuHandler();
 
-	enum DisplayedMenuType { main, pause };
 
-	short SelectedOption(DisplayedMenuType);
+	short SelectedOption(displayedMenuType);
 
 	static void DisplayMainMenu();
 	static void DisplayPauseMenu();
