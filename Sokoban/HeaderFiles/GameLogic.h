@@ -30,8 +30,8 @@ private:
 
 	void WhatToDo(_action action, MapHandler map);
 	void MakeMove(_Move move, MapHandler map);
-	void UndoMove();
-	void RedoMove();
+	void UndoMove(MapHandler map);
+	void RedoMove(MapHandler map);
 	/*void ApplyMoveToArr(int x, int y);
 	void MoveMapChange();
 	void MoveChest(int x, int y);

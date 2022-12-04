@@ -16,6 +16,7 @@ MapHandler::MapHandler(short selectedLvl = 1)
 	_width = 0;
 	_height = 0;
 	_map = nullptr;
+	st = no;
 
 	LoadMap(selectedLvl);
 }
@@ -45,8 +46,9 @@ char MapHandler::DisplayedChar(int width, int height)
 	else if (e == air) return char(32);
 	else if (e == player) return char(2);
 	else if (e == chest) return char(254);
-	else if (e == target) return char(158);
+	else if (e == target) return char(207);
 	else if (e == null) return char(255);
+	else if (e == winChest) return char(127);
 	else
 		 {
 			 cout << "Wystopil blad przy wyswietlaniu elementu mapy!" << endl;
@@ -124,6 +126,7 @@ MapHandler::mapElems MapHandler::FieldValue(char lvlElem)
 	else if (lvlElem == '4') return chest;
 	else if (lvlElem == '5') return target;
 	else if (lvlElem == '6') return null;
+	else if (lvlElem == '7') return winChest;
 	else {
 			 cout << "Wadliwy level, nierozpoznany element mapy!" << endl;
 			 return null;
@@ -171,10 +174,27 @@ char* MapHandler::PathHelper(short lvl)
 
 void MapHandler::ApplyMoveToArr(int x, int y)
 {
+	if (_map[_playerPosition.width + x][_playerPosition.height + y][_main] == target || _map[_playerPosition.width + x][_playerPosition.height + y][_main] == winChest)
+		st = willStep;
+
 	_map[_playerPosition.width + x][_playerPosition.height + y][_main] = player;
-	_map[_playerPosition.width][_playerPosition.height][_main] = air;
+
+
+	if (st == willStep) {
+		_map[_playerPosition.width][_playerPosition.height][_main] = air;
+		st = stepped;
+	}
+	else if (st == stepped) {
+		_map[_playerPosition.width][_playerPosition.height][_main] = target;
+		st = no;
+	}
+	else {
+		_map[_playerPosition.width][_playerPosition.height][_main] = air;
+	}
+	
 	_playerPosition.width += x;
 	_playerPosition.height += y;
+	
 }
 
 ///Stosowaæ przed zatwierdzeniem jakiegokolwiek ruchu
@@ -192,12 +212,21 @@ void MapHandler::MoveMapChange()
 
 void MapHandler::MoveChest(int x, int y)
 {
-	//if (!IsThereAWall(x+x, y+y)) {
+	if (_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] == target) {
+		_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] = winChest;
+		_map[_playerPosition.width + x][_playerPosition.height + y][_main] = air;
+	}
+	else if (_map[_playerPosition.width + x][_playerPosition.height + y][_main] == winChest) {
+		_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] = chest;
+		_map[_playerPosition.width + x][_playerPosition.height + y][_main] = target;
+	}
+	else {
 		_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] = chest;
 		_map[_playerPosition.width + x][_playerPosition.height + y][_main] = air;
 
-	//}
+	}
 }
+
 bool MapHandler::CanMove(int x, int y)
 {
 	return IsInfrontAvaible(_playerPosition.width, _playerPosition.height,  x,  y);
@@ -207,7 +236,7 @@ bool MapHandler::IsInfrontAvaible(int actualWidth, int actualHeight, int x, int 
 {
 	if (WhatIsInfront(actualWidth, actualHeight, x, y) == air || WhatIsInfront(actualWidth, actualHeight, x, y) == target)
 		return true;
-	else if (WhatIsInfront(actualWidth, actualHeight, x, y) == chest)
+	else if (WhatIsInfront(actualWidth, actualHeight, x, y) == chest || WhatIsInfront(actualWidth, actualHeight, x, y) == winChest)
 		return IsInfrontAvaible(actualWidth + x, actualHeight + y, x, y);
 	else
 		return false;
@@ -225,7 +254,59 @@ bool MapHandler::IsThereAWall(int x, int y)
 
 bool MapHandler::IsThereAChest(int x, int y)
 {
-	return _map[_playerPosition.width + x][_playerPosition.height + y][_main] == chest;
+	return _map[_playerPosition.width + x][_playerPosition.height + y][_main] == chest || _map[_playerPosition.width + x][_playerPosition.height + y][_main] == winChest;
+}
+
+void MapHandler::UndoMove()
+{
+	if (!IsMapTheSame(_main, _main + 1)) {
+		for (short w = 0; w < _width; w++) {
+			for (short h = 0; h < _height; h++) {
+				for (short d = 0; d < _hollow - 1; d++) {
+
+					_map[w][h][d] = _map[w][h][d + 1];
+
+					if (d == _main && _map[w][h][d] == player) {
+						_playerPosition.width = w;
+						_playerPosition.height = h;
+					}
+				}
+			}
+		}
+	}
+}
+
+void MapHandler::RedoMove()
+{
+	if (!IsMapTheSame(_main - 1, _main - 2)) {
+		for (short w = 0; w < _width; w++) {
+			for (short h = 0; h < _height; h++) {
+				for (short d = _hollow - 1; d > 0; d--) {
+
+					_map[w][h][d] = _map[w][h][d - 1];
+
+					if (d == _main && _map[w][h][d] == player) {
+						_playerPosition.width = w;
+						_playerPosition.height = h;
+					}
+				}
+			}
+		}
+	}
+}
+
+bool MapHandler::IsMapTheSame(int m, int mc)
+{
+	bool isSame = true;
+
+	for (short w = 0; w < _width; w++) {
+		for (short h = 0; h < _height; h++) {
+			if (_map[w][h][m] != _map[w][h][mc])
+				isSame = false;
+		}
+	}
+
+	return isSame;
 }
 
 void MapHandler::MapArrayInit()

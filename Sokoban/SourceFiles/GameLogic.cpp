@@ -72,10 +72,10 @@ void GameLogic::WhatToDo(_action action, MapHandler map)
 			MenuHandler::DisplayMainMenu();
 		}
 		else if (action == undo) {
-			UndoMove();
+			UndoMove(map);
 		}
 		else if (action == redo) {
-			RedoMove();
+			RedoMove(map);
 		}
 
 	} while (action == invalid);
@@ -87,32 +87,33 @@ void GameLogic::MakeMove(_Move move, MapHandler map)
 
 		map.MoveMapChange();
 
-		//ZROBIÆ PRZESUWANIE KILKU CHESTÓW NA RAZ
-		if (map.IsThereAChest(move.x, move.y) && (!map.IsThereAWall(move.x + move.x, move.y + move.y)  )){ //&& !map.IsThereAChest(move.x + move.x, move.y + move.y))) {
-			map.MoveChest(move.x, move.y);
+		if (map.IsThereAChest(move.x, move.y) && !map.IsThereAChest(move.x + move.x, move.y + move.y)) {
 
+			map.MoveChest(move.x, move.y);
 			map.ApplyMoveToArr(move.x, move.y);
 		}
 		else if(!map.IsThereAChest(move.x, move.y))
 			map.ApplyMoveToArr(move.x, move.y);
 		
-			//map.ApplyMoveToArr(move.x, move.y);
 
-		/*cout << boolalpha << map.CanMove(move.x, move.y) << endl;
-		system("pause");*/
 	}
-
 
 	map.DisplayMap();
 	ActionHandler(map);
 }
 
-void GameLogic::UndoMove()
+void GameLogic::UndoMove(MapHandler map)
 {
+	map.UndoMove();
 
+	map.DisplayMap();
+	ActionHandler(map);
 }
 
-void GameLogic::RedoMove()
+void GameLogic::RedoMove(MapHandler map)
 {
+	map.RedoMove();
 
+	map.DisplayMap();
+	ActionHandler(map);
 }
