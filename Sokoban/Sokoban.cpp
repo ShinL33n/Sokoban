@@ -14,7 +14,7 @@ int main()
 	//menuType = MenuHandler::DisplayedMenuType::main;
 
 	//int opt = menu.SelectedOption(menuType);
-
+	//std::cout << "\033#6";
 
 	//std::cout << opt;
 	int tmp;
@@ -23,11 +23,13 @@ int main()
 	std::cin.ignore(64, '\n');
 
 
-	MapHandler map(2);
-	map.DisplayMap();
-
+	MapHandler map(1);
 	GameLogic gm;
-	gm.ActionHandler(map);
 
+	//while (map.gS == game) {
+		map.DisplayMap();
+
+		gm.ActionHandler(map);
+	//}
     return 0;
 }

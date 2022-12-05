@@ -4,8 +4,6 @@
 class GameLogic
 {
 private:
-	//moze do usuniecia
-	bool _gameState;
 	unsigned int _numberOfMoves;
 
 	struct _Move {

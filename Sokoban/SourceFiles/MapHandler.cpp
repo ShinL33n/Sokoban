@@ -40,7 +40,7 @@ void MapHandler::DisplayMap()
 
 char MapHandler::DisplayedChar(int width, int height)
 {
-	mapElems e = _map[width][height][_main];
+	_mapElems e = _map[width][height][_main];
 
 		 if (e == wall) return char(178);
 	else if (e == air) return char(32);
@@ -48,7 +48,7 @@ char MapHandler::DisplayedChar(int width, int height)
 	else if (e == chest) return char(254);
 	else if (e == target) return char(207);
 	else if (e == null) return char(255);
-	else if (e == winChest) return char(127);
+	else if (e == winChest) return '#';//char(127);
 	else
 		 {
 			 cout << "Wystopil blad przy wyswietlaniu elementu mapy!" << endl;
@@ -85,7 +85,7 @@ void MapHandler::LevelToMapArray(ifstream &ifs)
 	ifs.seekg(0);
 
 	char lvlElem = '\0';
-	mapElems mE = null;
+	_mapElems mE = null;
 
 	for (short h = 0; h < _height; lvlElem != '\n' ? h++ : h) {
 		for (short w = 0; w < _width; lvlElem != '\n' ? w++ : w) {
@@ -118,7 +118,7 @@ void MapHandler::RedoMapInit()
 	}
 }
 
-MapHandler::mapElems MapHandler::FieldValue(char lvlElem)
+MapHandler::_mapElems MapHandler::FieldValue(char lvlElem)
 {
 		 if (lvlElem == '1') return wall;
 	else if (lvlElem == '2') return air;
@@ -215,6 +215,7 @@ void MapHandler::MoveChest(int x, int y)
 	if (_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] == target) {
 		_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] = winChest;
 		_map[_playerPosition.width + x][_playerPosition.height + y][_main] = air;
+		if(AreEveryChestOnTarget()) gS = win;
 	}
 	else if (_map[_playerPosition.width + x][_playerPosition.height + y][_main] == winChest) {
 		_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] = chest;
@@ -242,7 +243,7 @@ bool MapHandler::IsInfrontAvaible(int actualWidth, int actualHeight, int x, int 
 		return false;
 }
 
-MapHandler::mapElems MapHandler::WhatIsInfront(int w, int h, int x, int y)
+MapHandler::_mapElems MapHandler::WhatIsInfront(int w, int h, int x, int y)
 {
 	return _map[w + x][h + y][_main];
 }
@@ -309,13 +310,27 @@ bool MapHandler::IsMapTheSame(int m, int mc)
 	return isSame;
 }
 
+bool MapHandler::AreEveryChestOnTarget() {
+
+	bool result = true;
+
+	for (int w = 0; w < _width; w++) {
+		for (int h = 0; h < _height; h++) {
+
+			if (_map[w][h][_main] == chest) result = false;
+		}
+	}
+
+	return result;
+}
+
 void MapHandler::MapArrayInit()
 {
-	_map = new mapElems** [_width];
+	_map = new _mapElems** [_width];
 	for (short w = 0; w < _width; w++) {
-		_map[w] = new mapElems* [_height];
+		_map[w] = new _mapElems* [_height];
 		for (short h = 0; h < _height; h++) {
-			_map[w][h] = new mapElems[_hollow];
+			_map[w][h] = new _mapElems[_hollow];
 			for (short k = 0; k < _hollow; k++) {
 				_map[w][h][k] = null;
 			}
@@ -325,7 +340,7 @@ void MapHandler::MapArrayInit()
 
 void MapHandler::DeleteMapArray()
 {
-	for (short w = 0; w < _width; w++) {
+	/*for (short w = 0; w < _width; w++) {
 		for (short h = 0; h < _height; h++) {
 			delete[] _map[w][h];
 			_map[w][h] = nullptr;
@@ -335,5 +350,5 @@ void MapHandler::DeleteMapArray()
 	}
 
 	delete[] _map;
-	_map = nullptr;
+	_map = nullptr;*/
 }

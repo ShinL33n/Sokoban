@@ -7,7 +7,7 @@ using namespace std;
 
 GameLogic::GameLogic()
 {
-	_gameState = true;
+	
 }
 
 GameLogic::~GameLogic()
@@ -17,8 +17,15 @@ GameLogic::~GameLogic()
 
 void GameLogic::ActionHandler(MapHandler map)
 {
-
-	WhatToDo(CalledAction(), map);
+	if (map.gS == map.game)
+		WhatToDo(CalledAction(), map);
+	else if (map.gS == map.win)
+		cout << "WYGRANA!!!!";
+	else if (map.gS == map.lost)
+		cout << "PRZEGRANA!!!!";
+	else {
+		cout << "tu menu wyswietlane";
+	}
 
 }
 

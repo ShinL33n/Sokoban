@@ -17,8 +17,9 @@ private:
 	char DisplayedChar(int w, int h);
 
 	bool IsMapTheSame(int m, int mc);
+	bool AreEveryChestOnTarget();
 
-	enum mapElems {
+	enum _mapElems {
 		wall = 1,
 		air = 2,
 		player = 3,
@@ -34,13 +35,14 @@ private:
 		no
 	};
 
+	
 	struct _PlayerPosition {
 		int width;
 		int height;
 	};
 
-	mapElems FieldValue(char lvlElem);
-	mapElems*** _map;
+	_mapElems FieldValue(char lvlElem);
+	_mapElems*** _map;
 
 	_PlayerPosition _playerPosition;
 	
@@ -67,6 +69,15 @@ public:
 	void UndoMove();
 	void RedoMove();
 
-	mapElems WhatIsInfront(int w, int h, int x, int y);
+	_mapElems WhatIsInfront(int w, int h, int x, int y);
 
+
+	enum gameState {
+		game,
+		win,
+		lost,
+		menu
+	};
+
+	gameState gS = game;
 };

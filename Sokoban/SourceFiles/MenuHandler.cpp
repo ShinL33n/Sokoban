@@ -60,7 +60,9 @@ void MenuHandler::DisplaySokobanLogo()
 	cout << "\033[36;40m" << char(186) << "\033[96;40m  \\_______/  \\______/ \\__|  \\__| \\______/ \\_______/  \\_______|\\__|  \\__|   " << "\033[36;40m" << char(186) << endl;
 	cout << "\033[36;40m" << char(186) << "									    " << char(186) << endl;
 	cout << char(204);
-	for (int i = 0; i < 75; i++) cout << char(205);
+	for (int i = 0; i < 23; i++) cout << char(205);
+	cout << "\033[96;40m" << " Adrian Kisieli" << char(228) << "ski " << " s193086 \033[36;40m";
+	for (int i = 0; i < 23; i++) cout << char(205);
 	cout << char(185) << endl;
 	cout << char(186) << "									    " << char(186) << endl;
 };
@@ -78,6 +80,11 @@ void MenuHandler::DisplayMainMenu()
 	for (int i = 0; i < 75; i++) cout << char(205);
 	cout << char(188) << endl;
 	cout << "\033[97;40m";
+
+	/*for (int i = 32; i < 256; i++) {
+		cout << i << ":" << char(i) << "   ";
+		if (i % 10 == 0) cout << endl;
+	}*/
 };
 
 void MenuHandler::DisplayPauseMenu()
