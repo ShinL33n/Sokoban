@@ -1,5 +1,6 @@
 #pragma once
 #include "MapHandler.h"
+#include "MenuHandler.h"
 
 class GameLogic
 {
@@ -26,22 +27,16 @@ private:
 	_Move MoveVector(_action action);
 	_action CalledAction();
 
-	void WhatToDo(_action action, MapHandler map);
-	void MakeMove(_Move move, MapHandler map);
-	void UndoMove(MapHandler map);
-	void RedoMove(MapHandler map);
-	/*void ApplyMoveToArr(int x, int y);
-	void MoveMapChange();
-	void MoveChest(int x, int y);
+	void MakeMove(_Move move, MapHandler &map);
+	void UndoMove(MapHandler &map);
+	void RedoMove(MapHandler &map);
 
-	bool IsThereAWall(int x, int y);
-	bool IsThereAChest(int x, int y);*/
+	//GameProcess gameProc;
 
 public:
 	GameLogic();
 	~GameLogic();
 
-	void ActionHandler(MapHandler map);
-
+	void ActionHandler(MapHandler &map, MenuHandler &menuHndl);
 
 };

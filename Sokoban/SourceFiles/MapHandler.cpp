@@ -8,17 +8,10 @@ using namespace std;
 
 MapHandler::MapHandler()
 {
-
-}
-
-MapHandler::MapHandler(short selectedLvl = 1)
-{
 	_width = 0;
 	_height = 0;
 	_map = nullptr;
 	st = no;
-
-	LoadMap(selectedLvl);
 }
 
 MapHandler::~MapHandler()
@@ -29,10 +22,12 @@ MapHandler::~MapHandler()
 void MapHandler::DisplayMap()
 {
 	cout << "\033[H\033[J";
+	char display = '\0';
 
 	for (short h = 0; h < _height; h++) {
 		for (short w = 0; w < _width; w++) {
-			cout << DisplayedChar(w,h);
+
+			cout << DisplayedChar(w, h);
 		}
 		cout << endl;
 	}
@@ -54,7 +49,6 @@ char MapHandler::DisplayedChar(int width, int height)
 			 cout << "Wystopil blad przy wyswietlaniu elementu mapy!" << endl;
 			 return '\0';
 		 }
-
 }
 
 void MapHandler::LoadMap(short selectedLvl)

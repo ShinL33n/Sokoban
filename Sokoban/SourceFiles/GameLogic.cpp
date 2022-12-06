@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../HeaderFiles/GameLogic.h"
+#include "../HeaderFiles/GameProcess.h"
 #include "../HeaderFiles/MenuHandler.h"
 #include "../HeaderFiles/MapHandler.h"
 
@@ -7,7 +8,7 @@ using namespace std;
 
 GameLogic::GameLogic()
 {
-	
+
 }
 
 GameLogic::~GameLogic()
@@ -15,18 +16,32 @@ GameLogic::~GameLogic()
 
 }
 
-void GameLogic::ActionHandler(MapHandler map)
+void GameLogic::ActionHandler(MapHandler& map, MenuHandler& menuHndl)
 {
-	if (map.gS == map.game)
-		WhatToDo(CalledAction(), map);
-	else if (map.gS == map.win)
-		cout << "WYGRANA!!!!";
-	else if (map.gS == map.lost)
-		cout << "PRZEGRANA!!!!";
-	else {
-		cout << "tu menu wyswietlane";
-	}
+	_action action = CalledAction();
 
+	do {
+		if (action == invalid) action = CalledAction();
+
+		if (action == moveForward || action == moveBackwards || action == moveLeft || action == moveRight) {
+			MakeMove(MoveVector(action), map);
+		}
+		else if (action == menu) {
+			map.gS = map.menu;
+			menuHndl.menuType = menuHndl.pause;
+		}
+		else if (action == quit) {
+			map.gS = map.menu;
+			menuHndl.menuType = menuHndl.main;
+		}
+		else if (action == undo) {
+			UndoMove(map);
+		}
+		else if (action == redo) {
+			RedoMove(map);
+		}
+
+	} while (action == invalid);
 }
 
 GameLogic::_Move GameLogic::MoveVector(_action action)
@@ -64,31 +79,7 @@ GameLogic::_action GameLogic::CalledAction()
 		 }
 }
 
-void GameLogic::WhatToDo(_action action, MapHandler map)
-{
-	do {
-		if(action == invalid) action = CalledAction();
-
-		if (action == moveForward || action == moveBackwards || action == moveLeft || action == moveRight) {
-			MakeMove(MoveVector(action), map);
-		}
-		else if (action == menu) {
-			MenuHandler::DisplayPauseMenu();
-		}
-		else if (action == quit) {
-			MenuHandler::DisplayMainMenu();
-		}
-		else if (action == undo) {
-			UndoMove(map);
-		}
-		else if (action == redo) {
-			RedoMove(map);
-		}
-
-	} while (action == invalid);
-}
-
-void GameLogic::MakeMove(_Move move, MapHandler map)
+void GameLogic::MakeMove(_Move move, MapHandler &map)
 {
 	if (!map.IsThereAWall(move.x, move.y) && map.CanMove(move.x, move.y)) {
 
@@ -101,26 +92,15 @@ void GameLogic::MakeMove(_Move move, MapHandler map)
 		}
 		else if(!map.IsThereAChest(move.x, move.y))
 			map.ApplyMoveToArr(move.x, move.y);
-		
-
 	}
-
-	map.DisplayMap();
-	ActionHandler(map);
 }
 
-void GameLogic::UndoMove(MapHandler map)
+void GameLogic::UndoMove(MapHandler &map)
 {
 	map.UndoMove();
-
-	map.DisplayMap();
-	ActionHandler(map);
 }
 
-void GameLogic::RedoMove(MapHandler map)
+void GameLogic::RedoMove(MapHandler &map)
 {
 	map.RedoMove();
-
-	map.DisplayMap();
-	ActionHandler(map);
 }
