@@ -6,7 +6,7 @@
 class GameProcess
 {
 private:
-	short _levelCount = 2;
+	int _levelCount;
 
 	short EnteredNumber();
 

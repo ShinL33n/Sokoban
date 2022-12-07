@@ -42,7 +42,7 @@ short MenuHandler::SelectedOption(displayedMenuType MenuType)
 	return enteredOption;
 }
 
-void MenuHandler::DisplayLevels(short levelsCount)
+void MenuHandler::DisplayLevels(int levelsCount)
 {
 	cout << "\033[H\033[J";
 	cout << "\033[36;40m";

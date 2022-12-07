@@ -11,6 +11,8 @@ MapHandler::MapHandler()
 	_width = 0;
 	_height = 0;
 	_map = nullptr;
+	_isMapValid = true;
+	gS = game;
 	st = no;
 }
 
@@ -21,6 +23,9 @@ MapHandler::~MapHandler()
 
 void MapHandler::DisplayMap()
 {
+	if (!_isMapValid)
+		gS = menu;
+
 	cout << "\033[H\033[J";
 	char display = '\0';
 
@@ -30,6 +35,7 @@ void MapHandler::DisplayMap()
 			cout << DisplayedChar(w, h);
 		}
 		cout << endl;
+
 	}
 }
 
@@ -37,18 +43,48 @@ char MapHandler::DisplayedChar(int width, int height)
 {
 	_mapElems e = _map[width][height][_main];
 
-		 if (e == wall) return char(178);
+	if (e == wall) return char(178);
 	else if (e == air) return char(32);
 	else if (e == player) return char(2);
 	else if (e == chest) return char(254);
 	else if (e == target) return char(207);
 	else if (e == null) return char(255);
-	else if (e == winChest) return '#';//char(127);
+	else if (e == winChest) return '#'; //char(127);
 	else
 		 {
-			 cout << "Wystopil blad przy wyswietlaniu elementu mapy!" << endl;
+			 cout << "Wystapil blad przy wyswietlaniu elementu mapy!" << endl;
 			 return '\0';
 		 }
+}
+
+int MapHandler::NumberOfLevels()
+{
+	int levelCount = 0;
+	char* fileName;
+
+	ifstream inputTester;
+
+	for (int i = 1; true; i++)
+	{
+		inputTester.clear();
+		inputTester.seekg(0);
+
+		fileName = PathHelper(i);
+
+		inputTester.open(fileName, ifstream::in);
+
+		if (inputTester.good()) {
+			levelCount++;
+			inputTester.close();
+		}
+		else {
+			inputTester.close();
+			return levelCount;
+		}
+	}
+
+	inputTester.close();
+	return 0;
 }
 
 void MapHandler::LoadMap(short selectedLvl)
@@ -123,6 +159,8 @@ MapHandler::_mapElems MapHandler::FieldValue(char lvlElem)
 	else if (lvlElem == '7') return winChest;
 	else {
 			 cout << "Wadliwy level, nierozpoznany element mapy!" << endl;
+			 _isMapValid = false;
+			 system("pause");
 			 return null;
 		 }
 }
@@ -334,7 +372,7 @@ void MapHandler::MapArrayInit()
 
 void MapHandler::DeleteMapArray()
 {
-	/*for (short w = 0; w < _width; w++) {
+	for (short w = 0; w < _width; w++) {
 		for (short h = 0; h < _height; h++) {
 			delete[] _map[w][h];
 			_map[w][h] = nullptr;
@@ -344,5 +382,5 @@ void MapHandler::DeleteMapArray()
 	}
 
 	delete[] _map;
-	_map = nullptr;*/
+	_map = nullptr;
 }

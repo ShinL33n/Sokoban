@@ -21,6 +21,7 @@ int GameProcess::GameHandler()
 
 	short selectedLevel = 1;
 	short option;
+	_levelCount = map.NumberOfLevels();
 
 	while (true) {
 		if (menu.menuType == menu.main)
@@ -28,9 +29,11 @@ int GameProcess::GameHandler()
 		else
 			MenuHandler::DisplayPauseMenu();
 
+
 		if (map.gS == map.menu) map.gS = map.game;
 
 		option = menu.SelectedOption(menu.menuType);
+
 
 		if (menu.menuType == menu.main) {
 
@@ -83,11 +86,12 @@ short GameProcess::EnteredNumber()
 			cerr << "Wpisz podany wyzej numer poziomu!\n";
 		}
 
-		if (enteredOption > 0 && enteredOption <= _levelCount) {
+		if (enteredOption > 0 && enteredOption <= _levelCount)
 			isEnteredOptionValid = true;
-		}
+		
 
-		if (!isEnteredOptionValid) cout << "Wybierz poprawny poziom!!\n";
+		if (!isEnteredOptionValid)
+			cout << "Wybierz poprawny poziom!!\n";
 
 	} while (!isEnteredOptionValid);
 
@@ -121,7 +125,6 @@ void GameProcess::Win()
 void GameProcess::Lost()
 {
 	MenuHandler::DisplayWinScreen();
-
 
 	system("pause");
 }

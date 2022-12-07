@@ -7,6 +7,8 @@ private:
 	const unsigned int _main = _hollow / 2;
 	unsigned int _width, _height;
 
+	bool _isMapValid;
+
 	void LevelToMapArray(std::ifstream &ifs);
 	void MapSizeReading(std::ifstream &ifs);
 	void MapArrayInit();
@@ -55,19 +57,21 @@ public:
 	MapHandler(short selectedLvl);
 	~MapHandler();
 
+	int NumberOfLevels();
+
 	void LoadMap(short selectedLvl);
 	void DisplayMap();
 
 	void ApplyMoveToArr(int x, int y);
 	void MoveMapChange();
 	void MoveChest(int x, int y);
+	void UndoMove();
+	void RedoMove();
 
 	bool IsThereAWall(int x, int y);
 	bool IsThereAChest(int x, int y);
 	bool IsInfrontAvaible(int actualWidth, int actualHeight, int x, int y);
 	bool CanMove(int x, int y);
-	void UndoMove();
-	void RedoMove();
 
 	_mapElems WhatIsInfront(int w, int h, int x, int y);
 
@@ -79,5 +83,5 @@ public:
 		menu
 	};
 
-	gameState gS = game;
+	gameState gS;
 };

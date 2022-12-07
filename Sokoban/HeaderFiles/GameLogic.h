@@ -31,7 +31,6 @@ private:
 	void UndoMove(MapHandler &map);
 	void RedoMove(MapHandler &map);
 
-	//GameProcess gameProc;
 
 public:
 	GameLogic();

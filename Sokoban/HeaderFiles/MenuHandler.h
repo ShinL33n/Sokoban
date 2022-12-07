@@ -25,5 +25,5 @@ public:
 	static void DisplayLostScreen();
 	static void DisplayByeScreen();
 
-	void DisplayLevels(short levelsCount);
+	void DisplayLevels(int lntevelsCount);
 };

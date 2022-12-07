@@ -18,30 +18,33 @@ GameLogic::~GameLogic()
 
 void GameLogic::ActionHandler(MapHandler& map, MenuHandler& menuHndl)
 {
-	_action action = CalledAction();
+	if (map.gS == map.game) {
 
-	do {
-		if (action == invalid) action = CalledAction();
+		_action action = CalledAction();
 
-		if (action == moveForward || action == moveBackwards || action == moveLeft || action == moveRight) {
-			MakeMove(MoveVector(action), map);
-		}
-		else if (action == menu) {
-			map.gS = map.menu;
-			menuHndl.menuType = menuHndl.pause;
-		}
-		else if (action == quit) {
-			map.gS = map.menu;
-			menuHndl.menuType = menuHndl.main;
-		}
-		else if (action == undo) {
-			UndoMove(map);
-		}
-		else if (action == redo) {
-			RedoMove(map);
-		}
+		do {
+			if (action == invalid) action = CalledAction();
 
-	} while (action == invalid);
+			if (action == moveForward || action == moveBackwards || action == moveLeft || action == moveRight) {
+				MakeMove(MoveVector(action), map);
+			}
+			else if (action == menu) {
+				map.gS = map.menu;
+				menuHndl.menuType = menuHndl.pause;
+			}
+			else if (action == quit) {
+				map.gS = map.menu;
+				menuHndl.menuType = menuHndl.main;
+			}
+			else if (action == undo) {
+				UndoMove(map);
+			}
+			else if (action == redo) {
+				RedoMove(map);
+			}
+
+		} while (action == invalid);
+	}
 }
 
 GameLogic::_Move GameLogic::MoveVector(_action action)
