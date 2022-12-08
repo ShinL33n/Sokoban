@@ -12,6 +12,8 @@ MapHandler::MapHandler()
 	_height = 0;
 	_map = nullptr;
 	_isMapValid = true;
+	_playerPosition.width = 0;
+	_playerPosition.height = 0;
 	gS = game;
 	st = no;
 }
@@ -27,17 +29,29 @@ void MapHandler::DisplayMap()
 		gS = menu;
 
 	cout << "\033[H\033[J";
-	char display = '\0';
-
+		
 	for (short h = 0; h < _height; h++) {
 		for (short w = 0; w < _width; w++) {
 
 			cout << DisplayedChar(w, h);
 		}
 		cout << endl;
-
 	}
 }
+
+//void MapHandler::MoveCamera(char act)
+//{
+//	cout << "\033[H\033[J";
+//
+//	cout << "\033[u";
+//
+//		 if (act == 'u') cout << "\033[1A";
+//	else if (act == 'd') cout << "\033[1B";
+//	else if (act == 'r') cout << "\033[1C";
+//	else if (act == 'l') cout << "\033[1D";
+//
+//	cout << "\033[s";
+//}
 
 char MapHandler::DisplayedChar(int width, int height)
 {
@@ -117,8 +131,8 @@ void MapHandler::LevelToMapArray(ifstream &ifs)
 	char lvlElem = '\0';
 	_mapElems mE = null;
 
-	for (short h = 0; h < _height; lvlElem != '\n' ? h++ : h) {
-		for (short w = 0; w < _width; lvlElem != '\n' ? w++ : w) {
+	for (int h = 0; h < _height; lvlElem != '\n' ? h++ : h) {
+		for (int w = 0; w < _width; lvlElem != '\n' ? w++ : w) {
 
 			ifs.get(lvlElem);
 
@@ -137,9 +151,9 @@ void MapHandler::LevelToMapArray(ifstream &ifs)
 
 void MapHandler::RedoMapInit()
 {
-	for (short w = 0; w < _width; w++) {
-		for (short h = 0; h < _height; h++) {
-			for (short d = 0; d < _hollow; d++) {
+	for (int w = 0; w < _width; w++) {
+		for (int h = 0; h < _height; h++) {
+			for (int d = 0; d < _hollow; d++) {
 
 				if (d != _main) 
 					_map[w][h][d] = _map[w][h][_main];
@@ -188,26 +202,38 @@ void MapHandler::MapSizeReading(ifstream &ifs)
 char* MapHandler::PathHelper(short lvl)
 {
 	char* lvlName = new char[sizeof(short)];
+	
+	sprintf(lvlName, "%i", lvl);
+
 	char filePathPrefix[] = "ResourceFiles/levels/level";
 	//char filePathPrefix[] = "../../Sokoban/ResourceFiles/levels/level";
 	char filePathPostfix[] = ".txt";
 
-	sprintf(lvlName, "%i", lvl);
-
 	char* fileName = new char[strlen(filePathPrefix) + strlen(filePathPostfix) + strlen(lvlName)];
 	sprintf(fileName, "%c", '\0');
+
 
 	strcat(fileName, filePathPrefix);
 	strcat(fileName, lvlName);
 	strcat(fileName, filePathPostfix);
-	
+
 	return fileName;
 }
 
 void MapHandler::ApplyMoveToArr(int x, int y)
 {
-	if (_map[_playerPosition.width + x][_playerPosition.height + y][_main] == target || _map[_playerPosition.width + x][_playerPosition.height + y][_main] == winChest)
+	st = no;
+
+	if (_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] == target || _map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] == winChest) {
 		st = willStep;
+	}
+
+	if (_map[_playerPosition.width][_playerPosition.height][_main+2] == winChest || _map[_playerPosition.width][_playerPosition.height][_main + 2] == target)
+		st = stepped;
+
+	/*if (_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] == chest || _map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] == winChest)
+		st = stepped;*/
+
 
 	_map[_playerPosition.width + x][_playerPosition.height + y][_main] = player;
 
@@ -232,9 +258,9 @@ void MapHandler::ApplyMoveToArr(int x, int y)
 ///Stosowaæ przed zatwierdzeniem jakiegokolwiek ruchu
 void MapHandler::MoveMapChange()
 {
-	for (short w = 0; w < _width; w++) {
-		for (short h = 0; h < _height; h++) {
-			for (short d = _hollow - 1; d > _main; d--) {
+	for (int w = 0; w < _width; w++) {
+		for (int h = 0; h < _height; h++) {
+			for (int d = _hollow - 1; d > _main; d--) {
 
 				_map[w][h][d] = _map[w][h][d - 1];
 			}
@@ -245,15 +271,24 @@ void MapHandler::MoveMapChange()
 void MapHandler::MoveChest(int x, int y)
 {
 	if (_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] == target) {
+
+		if (_map[_playerPosition.width + x][_playerPosition.height + y][_main] == winChest)
+			_map[_playerPosition.width + x][_playerPosition.height + y][_main] = target;
+		else
+			_map[_playerPosition.width + x][_playerPosition.height + y][_main] = air;
+
 		_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] = winChest;
-		_map[_playerPosition.width + x][_playerPosition.height + y][_main] = air;
-		if(AreEveryChestOnTarget()) gS = win;
+
+		if (AreEveryChestOnTarget()) gS = win;
 	}
+
 	else if (_map[_playerPosition.width + x][_playerPosition.height + y][_main] == winChest) {
+
 		_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] = chest;
 		_map[_playerPosition.width + x][_playerPosition.height + y][_main] = target;
 	}
-	else {
+
+	else { //przesuwamy po prostu skrzynie
 		_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] = chest;
 		_map[_playerPosition.width + x][_playerPosition.height + y][_main] = air;
 
@@ -269,10 +304,24 @@ bool MapHandler::IsInfrontAvaible(int actualWidth, int actualHeight, int x, int 
 {
 	if (WhatIsInfront(actualWidth, actualHeight, x, y) == air || WhatIsInfront(actualWidth, actualHeight, x, y) == target)
 		return true;
-	else if (WhatIsInfront(actualWidth, actualHeight, x, y) == chest || WhatIsInfront(actualWidth, actualHeight, x, y) == winChest)
-		return IsInfrontAvaible(actualWidth + x, actualHeight + y, x, y);
+	else if (WhatIsInfront(actualWidth, actualHeight, x, y) == chest || WhatIsInfront(actualWidth, actualHeight, x, y) == winChest) {
+		if (WhatIsInfront(actualWidth + x, actualHeight + y, x, y) == chest || WhatIsInfront(actualWidth + x, actualHeight + y, x, y) == winChest || WhatIsInfront(actualWidth + x, actualHeight + y, x, y) == wall)
+			return false;
+		else
+			return true;
+	}
 	else
 		return false;
+}
+
+bool MapHandler::MultiTargets(int actualWidth, int actualHeight, int x, int y)
+{
+	if (WhatIsInfront(actualWidth, actualHeight, x, y) == air || WhatIsInfront(actualWidth, actualHeight, x, y) == chest)
+		return false;
+	else if (WhatIsInfront(actualWidth, actualHeight, x, y) == target || WhatIsInfront(actualWidth, actualHeight, x, y) == winChest)
+		return IsInfrontAvaible(actualWidth + x, actualHeight + y, x, y);
+	else
+		return true;
 }
 
 MapHandler::_mapElems MapHandler::WhatIsInfront(int w, int h, int x, int y)
@@ -280,22 +329,17 @@ MapHandler::_mapElems MapHandler::WhatIsInfront(int w, int h, int x, int y)
 	return _map[w + x][h + y][_main];
 }
 
-bool MapHandler::IsThereAWall(int x, int y)
-{
-	return _map[_playerPosition.width + x][_playerPosition.height + y][_main] == wall;
-}
-
 bool MapHandler::IsThereAChest(int x, int y)
 {
 	return _map[_playerPosition.width + x][_playerPosition.height + y][_main] == chest || _map[_playerPosition.width + x][_playerPosition.height + y][_main] == winChest;
 }
 
-void MapHandler::UndoMove()
+unsigned int MapHandler::UndoMove(unsigned int numberOfMoves)
 {
 	if (!IsMapTheSame(_main, _main + 1)) {
-		for (short w = 0; w < _width; w++) {
-			for (short h = 0; h < _height; h++) {
-				for (short d = 0; d < _hollow - 1; d++) {
+		for (int w = 0; w < _width; w++) {
+			for (int h = 0; h < _height; h++) {
+				for (int d = 0; d < _hollow - 1; d++) {
 
 					_map[w][h][d] = _map[w][h][d + 1];
 
@@ -306,15 +350,18 @@ void MapHandler::UndoMove()
 				}
 			}
 		}
+		numberOfMoves++;
 	}
+
+	return numberOfMoves;
 }
 
-void MapHandler::RedoMove()
+unsigned int MapHandler::RedoMove(unsigned int numberOfMoves)
 {
 	if (!IsMapTheSame(_main - 1, _main - 2)) {
-		for (short w = 0; w < _width; w++) {
-			for (short h = 0; h < _height; h++) {
-				for (short d = _hollow - 1; d > 0; d--) {
+		for (int w = 0; w < _width; w++) {
+			for (int h = 0; h < _height; h++) {
+				for (int d = _hollow - 1; d > 0; d--) {
 
 					_map[w][h][d] = _map[w][h][d - 1];
 
@@ -325,15 +372,18 @@ void MapHandler::RedoMove()
 				}
 			}
 		}
+		numberOfMoves--;
 	}
+
+	return numberOfMoves;
 }
 
 bool MapHandler::IsMapTheSame(int m, int mc)
 {
 	bool isSame = true;
 
-	for (short w = 0; w < _width; w++) {
-		for (short h = 0; h < _height; h++) {
+	for (int w = 0; w < _width; w++) {
+		for (int h = 0; h < _height; h++) {
 			if (_map[w][h][m] != _map[w][h][mc])
 				isSame = false;
 		}
@@ -359,11 +409,11 @@ bool MapHandler::AreEveryChestOnTarget() {
 void MapHandler::MapArrayInit()
 {
 	_map = new _mapElems** [_width];
-	for (short w = 0; w < _width; w++) {
+	for (int w = 0; w < _width; w++) {
 		_map[w] = new _mapElems* [_height];
-		for (short h = 0; h < _height; h++) {
+		for (int h = 0; h < _height; h++) {
 			_map[w][h] = new _mapElems[_hollow];
-			for (short k = 0; k < _hollow; k++) {
+			for (int k = 0; k < _hollow; k++) {
 				_map[w][h][k] = null;
 			}
 		}
@@ -372,8 +422,8 @@ void MapHandler::MapArrayInit()
 
 void MapHandler::DeleteMapArray()
 {
-	for (short w = 0; w < _width; w++) {
-		for (short h = 0; h < _height; h++) {
+	for (int w = 0; w < _width; w++) {
+		for (int h = 0; h < _height; h++) {
 			delete[] _map[w][h];
 			_map[w][h] = nullptr;
 		}

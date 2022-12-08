@@ -21,7 +21,11 @@ private:
 		quit,
 		undo,
 		redo,
-		invalid
+		invalid,
+		cameraUp,
+		cameraDown,
+		cameraLeft,
+		cameraRight
 	};
 
 	_Move MoveVector(_action action);
@@ -30,10 +34,14 @@ private:
 	void MakeMove(_Move move, MapHandler &map);
 	void UndoMove(MapHandler &map);
 	void RedoMove(MapHandler &map);
+	void DisplayNumOfMoves();
 
+	char* SettingsPathHelper(short lvl);
+
+	unsigned int CheckNumberOfMoves(short selectedLevel);
 
 public:
-	GameLogic();
+	GameLogic(short selectedLevel);
 	~GameLogic();
 
 	void ActionHandler(MapHandler &map, MenuHandler &menuHndl);

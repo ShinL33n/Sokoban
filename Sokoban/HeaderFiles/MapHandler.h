@@ -15,8 +15,8 @@ private:
 	void RedoMapInit();
 	void DeleteMapArray();
 	
-	char* PathHelper(short lvl);
 	char DisplayedChar(int w, int h);
+	char* PathHelper(short lvl);
 
 	bool IsMapTheSame(int m, int mc);
 	bool AreEveryChestOnTarget();
@@ -51,27 +51,27 @@ private:
 	_steppedOnTarget st;
 
 
-
 public:
 	MapHandler();
-	MapHandler(short selectedLvl);
 	~MapHandler();
 
 	int NumberOfLevels();
 
 	void LoadMap(short selectedLvl);
 	void DisplayMap();
-
 	void ApplyMoveToArr(int x, int y);
 	void MoveMapChange();
 	void MoveChest(int x, int y);
-	void UndoMove();
-	void RedoMove();
+	//void MoveCamera(char act);
 
-	bool IsThereAWall(int x, int y);
+	unsigned int UndoMove(unsigned int numberOfMoves);
+	unsigned int RedoMove(unsigned int numberOfMoves);
+
 	bool IsThereAChest(int x, int y);
 	bool IsInfrontAvaible(int actualWidth, int actualHeight, int x, int y);
+	bool MultiTargets(int actualWidth, int actualHeight, int x, int y);
 	bool CanMove(int x, int y);
+
 
 	_mapElems WhatIsInfront(int w, int h, int x, int y);
 

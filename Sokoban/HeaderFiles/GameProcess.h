@@ -6,11 +6,13 @@
 class GameProcess
 {
 private:
-	int _levelCount;
+	short _levelCount;
+	short _accessibleLevels;
+	short _selectedLevel;
 
 	short EnteredNumber();
 
-	void GameSequence(MapHandler &map, GameLogic &game, MenuHandler &menu);
+	void GameSequence(MapHandler &map, GameLogic game, MenuHandler &menu, std::fstream &fs);
 
 	void Win();
 	void Lost();
