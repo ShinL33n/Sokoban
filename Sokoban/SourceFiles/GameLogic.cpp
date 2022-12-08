@@ -110,6 +110,8 @@ void GameLogic::MakeMove(_Move move, MapHandler &map)
 		else if(!map.IsThereAChest(move.x, move.y))
 			map.ApplyMoveToArr(move.x, move.y);
 
+		map.BlockRedoAfterMove();
+
 		_numberOfMoves--;
 	}
 }

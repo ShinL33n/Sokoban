@@ -393,6 +393,16 @@ unsigned int MapHandler::RedoMove(unsigned int numberOfMoves)
 	return numberOfMoves;
 }
 
+void MapHandler::BlockRedoAfterMove()
+{
+	for (int w = 0; w < _width; w++) {
+		for (int h = 0; h < _height; h++) {
+
+			_map[w][h][_main-2] = _map[w][h][_main - 1];
+		}
+	}
+}
+
 bool MapHandler::IsMapTheSame(int m, int mc)
 {
 	bool isSame = true;

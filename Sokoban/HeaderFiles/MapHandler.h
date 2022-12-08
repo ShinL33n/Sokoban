@@ -71,6 +71,8 @@ public:
 	void MoveMapChange();
 	void MoveChest(int x, int y);
 	void MoveCamera(int x, int y);
+	void BlockRedoAfterMove();
+
 
 	unsigned int UndoMove(unsigned int numberOfMoves);
 	unsigned int RedoMove(unsigned int numberOfMoves);
