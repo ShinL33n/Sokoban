@@ -1,1 +1,3 @@
-﻿  Sokoban.vcxproj -> D:\Dokumenty\Programming projects\C++\Sokoban\x64\Debug\Sokoban.exe
+﻿  Sokoban.cpp
+C:\Pliki\Dokumenty\Programming Projects\C++\Sokoban\Sokoban\Sokoban.cpp(36,9): warning C4129: 'C': unrecognized character escape sequence
+  Sokoban.vcxproj -> C:\Pliki\Dokumenty\Programming Projects\C++\Sokoban\x64\Debug\Sokoban.exe

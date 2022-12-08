@@ -4,8 +4,6 @@
 #include <iomanip>
 #include "../HeaderFiles/GameLogic.h"
 #include "../HeaderFiles/GameProcess.h"
-#include "../HeaderFiles/MenuHandler.h"
-#include "../HeaderFiles/MapHandler.h"
 
 using namespace std;
 
@@ -47,18 +45,9 @@ void GameLogic::ActionHandler(MapHandler& map, MenuHandler& menuHndl)
 			else if (action == redo) {
 				RedoMove(map);
 			}
-			/*else if (action == cameraUp){
-				map.MoveCamera('u');
+			else if (action == cameraUp || action == cameraDown || action == cameraLeft || action == cameraRight) {
+				map.MoveCamera(MoveVector(action).x, MoveVector(action).y);
 			}
-			else if (action == cameraDown) {
-				map.MoveCamera('d');
-			}
-			else if (action == cameraLeft) {
-				map.MoveCamera('l');
-			}
-			else if (action == cameraRight) {
-				map.MoveCamera('r');
-			}*/
 
 		} while (action == invalid);
 
@@ -69,10 +58,10 @@ void GameLogic::ActionHandler(MapHandler& map, MenuHandler& menuHndl)
 
 GameLogic::_Move GameLogic::MoveVector(_action action)
 {
-		 if (action == moveForward)		return { 0, -1 };
-	else if (action == moveBackwards)	return { 0, 1 };
-	else if (action == moveLeft)		return { -1, 0 };
-	else if (action == moveRight)		return { 1, 0 };
+		 if (action == moveForward || action == cameraUp)		return { 0, -1 };
+	else if (action == moveBackwards || action == cameraDown)	return { 0, 1 };
+	else if (action == moveLeft || action == cameraLeft)		return { -1, 0 };
+	else if (action == moveRight || action == cameraRight)		return { 1, 0 };
 	else {
 			 return { 0, 0 };
 		 }

@@ -14,6 +14,9 @@ MapHandler::MapHandler()
 	_isMapValid = true;
 	_playerPosition.width = 0;
 	_playerPosition.height = 0;
+	_cameraPosition.w = 0;
+	_cameraPosition.h = 0;
+
 	gS = game;
 	st = no;
 }
@@ -29,9 +32,9 @@ void MapHandler::DisplayMap()
 		gS = menu;
 
 	cout << "\033[H\033[J";
-		
-	for (short h = 0; h < _height; h++) {
-		for (short w = 0; w < _width; w++) {
+
+	for (int h = _cameraPosition.h; h < _height && h < _cameraPosition.h + _screenHeight; h++) {
+		for (int w = _cameraPosition.w; w < _width && w < _cameraPosition.w + _screenWidth; w++) {
 
 			cout << DisplayedChar(w, h);
 		}
@@ -39,19 +42,33 @@ void MapHandler::DisplayMap()
 	}
 }
 
-//void MapHandler::MoveCamera(char act)
-//{
-//	cout << "\033[H\033[J";
-//
-//	cout << "\033[u";
-//
-//		 if (act == 'u') cout << "\033[1A";
-//	else if (act == 'd') cout << "\033[1B";
-//	else if (act == 'r') cout << "\033[1C";
-//	else if (act == 'l') cout << "\033[1D";
-//
-//	cout << "\033[s";
-//}
+void MapHandler::MoveCamera(int x, int y)
+{
+	if (_cameraPosition.w >= 0 && _cameraPosition.h >= 0) {
+
+		if (_cameraPosition.w == 0 && _cameraPosition.h == 0) {
+			
+			x >= 0 ? _cameraPosition.w += x : _cameraPosition.w;
+			y >= 0 ? _cameraPosition.h += y : _cameraPosition.h;
+		}
+		else if (_cameraPosition.h == 0) {
+
+			_cameraPosition.w += x;
+			y >= 0 ? _cameraPosition.h += y : _cameraPosition.h;
+		}
+		else if (_cameraPosition.w == 0) {
+
+			x >= 0 ? _cameraPosition.w += x : _cameraPosition.w;
+			_cameraPosition.h += y;
+		}
+		else {
+
+			_cameraPosition.w += x;
+			_cameraPosition.h += y;
+		}
+	}
+
+}
 
 char MapHandler::DisplayedChar(int width, int height)
 {
@@ -103,6 +120,8 @@ int MapHandler::NumberOfLevels()
 
 void MapHandler::LoadMap(short selectedLvl)
 {	
+	_cameraPosition.w = 0;
+	_cameraPosition.h = 0;
 
 	char* fileName = PathHelper(selectedLvl);
 
@@ -231,9 +250,6 @@ void MapHandler::ApplyMoveToArr(int x, int y)
 	if (_map[_playerPosition.width][_playerPosition.height][_main+2] == winChest || _map[_playerPosition.width][_playerPosition.height][_main + 2] == target)
 		st = stepped;
 
-	/*if (_map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] == chest || _map[_playerPosition.width + x + x][_playerPosition.height + y + y][_main] == winChest)
-		st = stepped;*/
-
 
 	_map[_playerPosition.width + x][_playerPosition.height + y][_main] = player;
 
@@ -252,7 +268,6 @@ void MapHandler::ApplyMoveToArr(int x, int y)
 	
 	_playerPosition.width += x;
 	_playerPosition.height += y;
-	
 }
 
 ///Stosowaæ przed zatwierdzeniem jakiegokolwiek ruchu

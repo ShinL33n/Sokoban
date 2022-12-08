@@ -5,6 +5,8 @@ class MapHandler
 private:
 	const unsigned int _hollow = 21;
 	const unsigned int _main = _hollow / 2;
+	const unsigned int _screenWidth = 80;
+	const unsigned int _screenHeight = 25;
 	unsigned int _width, _height;
 
 	bool _isMapValid;
@@ -43,10 +45,16 @@ private:
 		int height;
 	};
 
+	struct _CameraPosition {
+		int w;
+		int h;
+	};
+
 	_mapElems FieldValue(char lvlElem);
 	_mapElems*** _map;
 
 	_PlayerPosition _playerPosition;
+	_CameraPosition _cameraPosition;
 	
 	_steppedOnTarget st;
 
@@ -62,7 +70,7 @@ public:
 	void ApplyMoveToArr(int x, int y);
 	void MoveMapChange();
 	void MoveChest(int x, int y);
-	//void MoveCamera(char act);
+	void MoveCamera(int x, int y);
 
 	unsigned int UndoMove(unsigned int numberOfMoves);
 	unsigned int RedoMove(unsigned int numberOfMoves);

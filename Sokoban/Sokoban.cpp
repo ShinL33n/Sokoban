@@ -33,6 +33,7 @@ int main()
 
 	//	gm.ActionHandler(map);
 	////}
+	//REG ADD HKCU\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1
 
 	GameProcess gameProcess;
 	gameProcess.GameHandler();
