@@ -19,7 +19,7 @@ int GameProcess::GameHandler()
 {
 	MenuHandler menu;
 	MapHandler map;
-	GameLogic* game;
+	GameLogic* game = new GameLogic(_selectedLevel);;
 
 	short option;
 	_levelCount = map.NumberOfLevels();
@@ -61,8 +61,8 @@ int GameProcess::GameHandler()
 				if (_selectedLevel <= _accessibleLevels) {
 
 					map.LoadMap(_selectedLevel);
-					game = new GameLogic(_selectedLevel);
-					GameSequence(map, *game, menu, fs);
+					//game = new GameLogic(_selectedLevel);
+					GameSequence(map, game, menu, fs);
 				}
 				else {
 
@@ -81,15 +81,15 @@ int GameProcess::GameHandler()
 			{
 			case 1:
 				menu.menuType = menu.main;
-				game = new GameLogic(_selectedLevel);
-				GameSequence(map, *game, menu, fs);
+				//game = new GameLogic(_selectedLevel);
+				GameSequence(map, game, menu, fs);
 				break;
 
 			case 2:
 				menu.menuType = menu.main;
 				map.LoadMap(_selectedLevel);
-				game = new GameLogic(_selectedLevel);
-				GameSequence(map, *game, menu, fs);
+				//game = new GameLogic(_selectedLevel);
+				GameSequence(map, game, menu, fs);
 				break;
 
 			case 3:
@@ -130,34 +130,45 @@ short GameProcess::EnteredNumber()
 	return enteredOption;
 }
 
-void GameProcess::GameSequence(MapHandler &map, GameLogic game, MenuHandler &menu, fstream &fs)
-{
+void GameProcess::GameSequence(MapHandler &map, GameLogic *game, MenuHandler &menu, fstream &fs)
+{	
+	game = new GameLogic(_selectedLevel);
+
 	while (map.gS == map.game) {
 		map.DisplayMap();
-		game.ActionHandler(map, menu);
-	}
+		(*game).ActionHandler(map, menu);
+		//}
 
-	if (map.gS == map.win) {
+		if (map.gS == map.win) {
 
-		map.gS = map.game;
-		cout << _selectedLevel << endl;
-		Win();
+			map.gS = map.game;
 
-		if (fs.good()){
-			if(_selectedLevel >= _accessibleLevels)
-				fs << ++_selectedLevel;
+			Win();
+
+			if (fs.good()) {
+				if (_selectedLevel >= _accessibleLevels)
+					fs << ++_selectedLevel;
+			}
+			else {
+				cout << "Nie udalo sie zapisac postepu." << endl;
+				system("pause");
+			}
+
+			map.LoadMap(_selectedLevel);
+			game = new GameLogic(_selectedLevel);
 		}
-		else {
-			cout << "Nie udalo sie zapisac postepu." << endl;
-			system("pause");
+
+		else if (map.gS == map.lost) {
+
+			map.gS = map.game;
+			Lost();
+			map.LoadMap(_selectedLevel);
+			game = new GameLogic(_selectedLevel);
 		}
 	}
 
-	else if (map.gS == map.lost) {
+	//map.gS = map.game;
 
-		map.gS = map.game;
-		Lost();
-	}
 }
 
 void GameProcess::Win()
