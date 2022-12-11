@@ -7,6 +7,7 @@ class GameLogic
 private:
 	unsigned int _numberOfMoves;
 
+
 	struct _Move {
 		int x;
 		int y;
@@ -31,6 +32,7 @@ private:
 	_Move MoveVector(_action action);
 	_action CalledAction();
 
+
 	void MakeMove(_Move move, MapHandler &map);
 	void UndoMove(MapHandler &map);
 	void RedoMove(MapHandler &map);
@@ -40,10 +42,12 @@ private:
 
 	unsigned int CheckNumberOfMoves(short selectedLevel);
 
+
 public:
 	GameLogic(short selectedLevel);
 	~GameLogic();
 
-	void ActionHandler(MapHandler &map, MenuHandler &menuHndl);
 
+	// Obs³uga akcji podejmowanych przez gracza.
+	void ActionHandler(MapHandler &map, MenuHandler &menuHndl);
 };

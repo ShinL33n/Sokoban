@@ -13,17 +13,20 @@ public:
 	MenuHandler();
 	~MenuHandler();
 
-	enum displayedMenuType { main, pause };
+	enum displayedMenuType { 
+		main, 
+		pause 
+	};
 
 	displayedMenuType menuType;
 
+
 	short SelectedOption(displayedMenuType);
 
+	void DisplayLevels(int levelsCount);
 	static void DisplayMainMenu();
 	static void DisplayPauseMenu();
 	static void DisplayWinScreen();
 	static void DisplayLostScreen();
 	static void DisplayByeScreen();
-
-	void DisplayLevels(int lntevelsCount);
 };

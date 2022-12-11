@@ -6,6 +6,7 @@ using namespace std;
 
 GameProcess::GameProcess()
 {
+	_levelCount = 1;
 	_accessibleLevels = 1;
 	_selectedLevel = 1;
 }
@@ -39,10 +40,10 @@ int GameProcess::GameHandler()
 		option = menu.SelectedOption(menu.menuType);
 
 
+		// Obs³uga menu g³ownego.
 		if (menu.menuType == menu.main) {
 
-			switch (option)
-			{
+			switch (option) {
 			case 1:
 				menu.DisplayLevels(_levelCount);
 				_selectedLevel = EnteredNumber();
@@ -61,7 +62,6 @@ int GameProcess::GameHandler()
 				if (_selectedLevel <= _accessibleLevels) {
 
 					map.LoadMap(_selectedLevel);
-					//game = new GameLogic(_selectedLevel);
 					GameSequence(map, game, menu, fs);
 				}
 				else {
@@ -75,20 +75,19 @@ int GameProcess::GameHandler()
 				return 0;
 			}
 		}
+
+		// Obs³uga menu pauzy.
 		else if (menu.menuType == menu.pause) {
 
-			switch (option)
-			{
+			switch (option) {
 			case 1:
 				menu.menuType = menu.main;
-				//game = new GameLogic(_selectedLevel);
 				GameSequence(map, game, menu, fs);
 				break;
 
 			case 2:
 				menu.menuType = menu.main;
 				map.LoadMap(_selectedLevel);
-				//game = new GameLogic(_selectedLevel);
 				GameSequence(map, game, menu, fs);
 				break;
 
@@ -106,6 +105,56 @@ int GameProcess::GameHandler()
 	fs.close();
 }
 
+void GameProcess::GameSequence(MapHandler &map, GameLogic *game, MenuHandler &menu, fstream &fs)
+{	
+	// Tworzenie nowej instancji w momencie zaczêcia nowego poziomu.
+	game = new GameLogic(_selectedLevel);
+
+	// Pêtla obs³uguj¹ca przechodzony poziom.
+	while (map.gS == map.game) {
+
+		map.DisplayMap();
+		(*game).ActionHandler(map, menu);
+
+		if (map.gS == map.win) {
+
+			map.gS = map.game;
+
+			Win();
+
+			fs.clear();
+			fs.seekg(0);
+
+			if (fs.good()) {
+				if (_selectedLevel >= _accessibleLevels)
+					fs << ++_selectedLevel;
+			}
+			else {
+				cout << "Nie udalo sie zapisac postepu." << endl;
+				system("pause");
+			}
+
+
+			if (_selectedLevel >= _accessibleLevels) {
+				map.LoadMap(_selectedLevel);
+				game = new GameLogic(_selectedLevel);
+			}
+			else {
+				map.LoadMap(_selectedLevel + 1);
+				game = new GameLogic(_selectedLevel + 1);
+			}
+		}
+
+		else if (map.gS == map.lost) {
+
+			map.gS = map.game;
+			Lost();
+			map.LoadMap(_selectedLevel);
+			game = new GameLogic(_selectedLevel);
+		}
+	}
+}
+
 short GameProcess::EnteredNumber()
 {
 	short enteredOption;
@@ -120,55 +169,14 @@ short GameProcess::EnteredNumber()
 
 		if (enteredOption > 0 && enteredOption <= _levelCount)
 			isEnteredOptionValid = true;
-		
+
 
 		if (!isEnteredOptionValid)
-			cout << "Wybierz poprawny poziom!!\n";
+			cout << "Wybierz poprawny poziom!\n";
 
 	} while (!isEnteredOptionValid);
 
 	return enteredOption;
-}
-
-void GameProcess::GameSequence(MapHandler &map, GameLogic *game, MenuHandler &menu, fstream &fs)
-{	
-	game = new GameLogic(_selectedLevel);
-
-	while (map.gS == map.game) {
-		map.DisplayMap();
-		(*game).ActionHandler(map, menu);
-		//}
-
-		if (map.gS == map.win) {
-
-			map.gS = map.game;
-
-			Win();
-
-			if (fs.good()) {
-				if (_selectedLevel >= _accessibleLevels)
-					fs << ++_selectedLevel;
-			}
-			else {
-				cout << "Nie udalo sie zapisac postepu." << endl;
-				system("pause");
-			}
-
-			map.LoadMap(_selectedLevel);
-			game = new GameLogic(_selectedLevel);
-		}
-
-		else if (map.gS == map.lost) {
-
-			map.gS = map.game;
-			Lost();
-			map.LoadMap(_selectedLevel);
-			game = new GameLogic(_selectedLevel);
-		}
-	}
-
-	//map.gS = map.game;
-
 }
 
 void GameProcess::Win()

@@ -103,11 +103,6 @@ void MenuHandler::DisplayMainMenu()
 	for (int i = 0; i < 75; i++) cout << char(205);
 	cout << char(188) << endl;
 	cout << "\033[97;40m";
-
-	/*for (int i = 32; i < 256; i++) {
-		cout << i << ":" << char(i) << "   ";
-		if (i % 10 == 0) cout << endl;
-	}*/
 };
 
 void MenuHandler::DisplayPauseMenu()

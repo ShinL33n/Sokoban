@@ -11,17 +11,18 @@ private:
 
 	bool _isMapValid;
 
-	void LevelToMapArray(std::ifstream &ifs);
 	void MapSizeReading(std::ifstream &ifs);
+	void LevelToMapArray(std::ifstream &ifs);
 	void MapArrayInit();
-	void RedoMapInit();
 	void DeleteMapArray();
+	void RedoMapInit();
 	
 	char DisplayedChar(int w, int h);
 	char* PathHelper(short lvl);
 
 	bool IsMapTheSame(int m, int mc);
 	bool AreEveryChestOnTarget();
+
 
 	enum _mapElems {
 		wall = 1,
@@ -38,7 +39,6 @@ private:
 		stepped,
 		no
 	};
-
 	
 	struct _PlayerPosition {
 		int width;
@@ -63,24 +63,21 @@ public:
 	MapHandler();
 	~MapHandler();
 
-	int NumberOfLevels();
-
 	void LoadMap(short selectedLvl);
 	void DisplayMap();
-	void ApplyMoveToArr(int x, int y);
 	void MoveMapChange();
 	void MoveChest(int x, int y);
+	void ApplyMoveToArr(int x, int y);
 	void MoveCamera(int x, int y);
 	void BlockRedoAfterMove();
 
-
+	int NumberOfLevels();
 	unsigned int UndoMove(unsigned int numberOfMoves);
 	unsigned int RedoMove(unsigned int numberOfMoves);
 
+	bool CanMove(int x, int y);
 	bool IsThereAChest(int x, int y);
 	bool IsInfrontAvaible(int actualWidth, int actualHeight, int x, int y);
-	bool MultiTargets(int actualWidth, int actualHeight, int x, int y);
-	bool CanMove(int x, int y);
 
 
 	_mapElems WhatIsInfront(int w, int h, int x, int y);

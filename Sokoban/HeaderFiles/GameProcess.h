@@ -10,18 +10,19 @@ private:
 	short _accessibleLevels;
 	short _selectedLevel;
 
-	short EnteredNumber();
 
 	void GameSequence(MapHandler &map, GameLogic *game, MenuHandler &menu, std::fstream &fs);
-
 	void Win();
 	void Lost();
+
+	short EnteredNumber();
 
 
 public:
 	GameProcess();
 	~GameProcess();
 
+	// Nieskoñczona pêtla menu gry zawieraj¹ca wszystkie
+	// dostêpne opcje oferowane przez program.
 	int GameHandler();
-
 };

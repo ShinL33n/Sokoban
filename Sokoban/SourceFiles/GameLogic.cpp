@@ -23,6 +23,9 @@ void GameLogic::ActionHandler(MapHandler& map, MenuHandler& menuHndl)
 
 	if (map.gS == map.game) {
 
+		if (_numberOfMoves == 0)
+			map.gS = map.lost;
+
 		_action action = CalledAction();
 
 		do {
@@ -50,9 +53,6 @@ void GameLogic::ActionHandler(MapHandler& map, MenuHandler& menuHndl)
 			}
 
 		} while (action == invalid);
-
-		if (_numberOfMoves == 0)
-			map.gS = map.lost;
 	}
 }
 
@@ -126,6 +126,17 @@ void GameLogic::RedoMove(MapHandler &map)
 	_numberOfMoves = map.RedoMove(_numberOfMoves);
 }
 
+void GameLogic::DisplayNumOfMoves()
+{
+	cout << char(218);
+	for (int i = 0; i < 22; i++) cout << char(196);
+	cout << char(191) << endl;
+	cout << char(179) << "Pozostalych ruchow:" << setw(3) << _numberOfMoves << char(179) << endl;
+	cout << char(192);
+	for (int i = 0; i < 22; i++) cout << char(196);
+	cout << char(217) << endl;
+}
+
 char* GameLogic::SettingsPathHelper(short lvl)
 {
 	char* lvlName = new char[sizeof(short)];
@@ -167,15 +178,4 @@ unsigned int GameLogic::CheckNumberOfMoves(short selectedLevel)
 	ifs.close();
 
 	return MON;
-}
-
-void GameLogic::DisplayNumOfMoves()
-{
-	cout << char(218);
-	for (int i = 0; i < 22; i++) cout << char(196);
-	cout << char(191) << endl;
-	cout << char(179) << "Pozostalych ruchow:" << setw(3) << _numberOfMoves << char(179) << endl;
-	cout << char(192);
-	for (int i = 0; i < 22; i++) cout << char(196);
-	cout << char(217) << endl;
 }
